@@ -21,45 +21,49 @@ connection.connect((err) => {
 });
 
 app.use(express.static('public'));
+app.use(express.json());
 
 // Handle socket connections
 io.on('connection', (socket) => {
 
-  // Handle the 'saveEmoji' event
+  // Handle the 'saveEmoji' event from frontend (triggered on POST request)
   socket.on('saveEmoji', (data) => {
-    const { emoji_symbol, x, y } = data; // Destructure the data sent from the frontend
-
-    // SQL query to insert the emoji data into the database
-    const query = 'INSERT INTO emojis (emoji_symbol, x, y) VALUES (?, ?, ?)';
+    const { emoji_symbol, x, y } = data;
     connection.query(query, [emoji_symbol, x, y], (err, result) => {
       if (err) throw err;
+      socket.emit('emojiSaved', savedEmoji);
     });
   });
 
-  // Handle other events, such as updating emoji position
+  // Handle dragEmoji event to update the emoji position
   socket.on('dragEmoji', (data) => {
-    // Broadcast the dragged emoji's new position to all other clients
     socket.broadcast.emit('updateEmojiPosition', data);
-  });
-
-  // Handle disconnect
-  socket.on('disconnect', () => {
   });
 });
 
-// Route to fetch data from database
+// GET API to fetch data from the database (initial load of emojis)
 app.get('/api/data', (req, res) => {
-  // Query to fetch data from your table (assuming `emoji_table`)
   const query = 'SELECT id, x, y, emoji_symbol FROM emojis';
 
   connection.query(query, (err, results) => {
     if (err) {
-      console.error('Error fetching data:', err);
       return res.status(500).json({ message: 'Error fetching data from database' });
     }
+    res.json(results); // Send the emoji data as response
+  });
+});
 
-    // Send the fetched data as response
-    res.json(results);
+// POST API to save emoji data from frontend
+app.post('/api/saveEmoji', (req, res) => {
+  const { emoji_symbol, x, y } = req.body;
+
+  const query = 'INSERT INTO emojis (emoji_symbol, x, y) VALUES (?, ?, ?)';
+  connection.query(query, [emoji_symbol, x, y], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error saving emoji to database' });
+    }
+    const savedEmoji = { id: result.insertId, emoji_symbol, x, y };
+    res.json(savedEmoji);
   });
 });
 
