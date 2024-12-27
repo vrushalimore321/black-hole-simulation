@@ -229,26 +229,21 @@ canvas.addEventListener('drop', (e) => {
         y: Number(y.toFixed(3))
     };
 
- // Send data to the backend API via POST
- fetch('/api/saveEmoji', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-})
-.then(response => response.json())
-.then(savedEmoji => {
-    const tableBody = document.querySelector('#dataTable tbody');
-    if (tableBody) {
-        insertRow(tableBody, savedEmoji);
-    }
-});
-});
-
-socket.on('emojiSaved', (emoji) => {
-    const tableBody = document.querySelector('#dataTable tbody');
-    insertRow(tableBody, emoji);
+    // Send data to the backend API via POST
+    fetch('/api/saveEmoji', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(savedEmoji => {
+            const tableBody = document.querySelector('#dataTable tbody');
+            if (tableBody) {
+                insertRow(tableBody, savedEmoji);
+            }
+        });
 });
 
 fetch('/api/data')
