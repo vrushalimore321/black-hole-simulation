@@ -247,8 +247,8 @@ canvas.addEventListener('drop', (e) => {
 });
 
 fetch('/api/data')
-.then(response => response.json())
-.then(data => {
+    .then(response => response.json())
+    .then(data => {
         const tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
 
         // Save current checkbox states before updating
@@ -261,10 +261,10 @@ fetch('/api/data')
         data.forEach(emoji => {
             insertRow(tableBody, emoji);
         });
-    updateSelectedCount();
-});
+        updateSelectedCount();
+    });
 
-function insertRow(tableBody, emoji){
+function insertRow(tableBody, emoji) {
     const row = tableBody.insertRow();
     const isChecked = checkboxStates.get(emoji.id.toString()) || false;
     row.innerHTML = `

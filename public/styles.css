@@ -35,11 +35,14 @@ table {
     font-family: Arial, sans-serif;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     padding: 8px;
     text-align: left;
 }
