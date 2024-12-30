@@ -8,8 +8,8 @@ let checkboxStates = new Map();
 
 // Constants for gravitational pull
 const GRAVITY_CONSTANT = 0.1;
-const blackHoleX = canvas.width / 2;
-const blackHoleY = canvas.height / 2;
+const blackHoleX = canvas.width / 2.04;
+const blackHoleY = canvas.height / 1.97;
 const blackHoleRadius = 30;
 
 // Calculate gravitational pull on an emoji
@@ -29,13 +29,15 @@ function calculateGravitationalPull(emoji) {
 
 // Draw the black hole with glowing effect
 function drawBlackHole() {
-    const blackHoleRadius = 180;
-    const borderThickness = 2;
-    const borderColor = '#360342';
+    const blackHoleX = canvas.width / 2.04;
+    const blackHoleY = canvas.height / 1.97;
+    const blackHoleRadius = 200;
+    const borderThickness = 4;
+    const borderColor = 'rgb(209, 209, 241)';
     const gradient = ctx.createRadialGradient(blackHoleX, blackHoleY, 0, blackHoleX, blackHoleY, blackHoleRadius);
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+    gradient.addColorStop(0, 'rgb(10, 0, 26)');
+    gradient.addColorStop(0.5, 'rgba(121, 88, 88, 0.3)');
+    gradient.addColorStop(1, 'rgba(12, 12, 12, 0.1)');
 
     ctx.fillStyle = gradient;
     ctx.beginPath();
@@ -58,8 +60,8 @@ function drawEmojis() {
 
 // Check if emoji is inside the black hole
 function checkCollision(emoji) {
-    const dx = blackHoleX - emoji.x;
-    const dy = blackHoleY - emoji.y;
+    const dx = blackHoleX - emoji.x - 20;
+    const dy = blackHoleY - emoji.y + 10;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     // If the emoji is inside the black hole's radius, disable it
@@ -117,7 +119,7 @@ function drawLine(x1, y1, x2, y2, color = 'yellow', width = 1, dashPattern = [3,
 
 // Update the drawLinesToBlackHole function to verify coordinates
 function drawLinesToBlackHole() {
-    const emojiWidth = 30; // Approximate width of the emoji
+    const emojiWidth = 30;
 
     // Get all checkboxes from the table
     const checkboxes = document.querySelectorAll('table input[type="checkbox"]');
@@ -127,7 +129,6 @@ function drawLinesToBlackHole() {
 
     if (isAnyCheckboxSelected) {
         Array.from(checkboxes).filter(checkbox => checkbox.checked).forEach((checkbox) => {
-            const emojiId = checkbox.dataset.id;
             const emojiX = checkbox.dataset.x;
             const emojiY = checkbox.dataset.y;
 
@@ -159,7 +160,7 @@ function drawWhiteBorder() {
     ctx.save();
 
     // Move the origin to the center of the canvas (so rotation happens around the center)
-    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.translate(canvas.width / 2.04, canvas.height / 1.97);
 
     // Set up the dashed line pattern [dash length, gap length]
     ctx.setLineDash([4, 4]);
